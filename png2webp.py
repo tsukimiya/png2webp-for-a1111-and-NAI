@@ -36,7 +36,7 @@ def format_size(size):
             return f"{size:.2f} {unit}"
         size /= 1024
 
-def convert_images_in_directory(directory, delete_original):
+def convert_images_in_directory(directory, delete_original, lossless):
     # 画像を配列に格納
     files = glob.glob(os.path.join(directory, '**', '*.' + IMG_INPUT_FILENAME_EXT), recursive=True)
     total_files = len(files)
@@ -82,8 +82,11 @@ def convert_images_in_directory(directory, delete_original):
         # 元のファイルサイズを取得
         original_size = os.path.getsize(file)
 
-        # WEBPに変換（ロスレス）
-        image.save(output_file_path, IMG_OUTPUT_FORMAT, lossless=True)
+        # WEBPに変換
+        if lossless:
+            image.save(output_file_path, IMG_OUTPUT_FORMAT, lossless=True)
+        else:
+            image.save(output_file_path, IMG_OUTPUT_FORMAT, quality=WEBP_QUALITY)
 
         # 画像を閉じる
         image.close()
@@ -152,5 +155,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Convert PNG images to WEBP format in a specified directory.')
     parser.add_argument('directory', type=str, help='The directory containing PNG images to convert.')
     parser.add_argument('--delete', action='store_true', help='Delete original PNG files after conversion.')
+    parser.add_argument('--lossless', action='store_true', help='Convert images to lossless WEBP format.')
     args = parser.parse_args()
-    convert_images_in_directory(args.directory, args.delete)
+    convert_images_in_directory(args.directory, args.delete, args.lossless)
