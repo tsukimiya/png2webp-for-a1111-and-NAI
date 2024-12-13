@@ -84,7 +84,7 @@ def convert_images_in_directory(directory, delete_original, lossless):
 
         # WEBPに変換
         if lossless:
-            image.save(output_file_path, IMG_OUTPUT_FORMAT, lossless=True)
+            image.save(output_file_path, IMG_OUTPUT_FORMAT, lossless=True, quality=WEBP_QUALITY)
         else:
             image.save(output_file_path, IMG_OUTPUT_FORMAT, quality=WEBP_QUALITY)
 
